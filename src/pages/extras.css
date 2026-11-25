@@ -1,0 +1,16 @@
+.logo-preview { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; display: block; margin: 8px 0; border: 1px solid var(--line); }
+.form-ok { color: var(--ok); font-weight: 700; }
+.detail-info .btn.ghost { text-align: center; }
+.pimg, .detail-img { overflow: hidden; }
+.pimg img, .detail-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pcard.sold { opacity: 0.7; }
+.tag { justify-self: start; background: #fee2e2; color: #b91c1c; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.state { text-align: center; padding: 48px 16px; color: var(--muted); }
+.pager { display: flex; gap: 12px; align-items: center; justify-content: center; padding-bottom: 40px; }
+.chip:disabled { opacity: 0.4; cursor: default; }
+.thumbs { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.thumbs button { width: 56px; height: 56px; padding: 0; border: 2px solid var(--line); border-radius: 10px; overflow: hidden; background: none; cursor: pointer; }
+.thumbs button.on { border-color: var(--brand); }
+.thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+a.chip { display: inline-block; }
+.auth { gap: 16px; }
