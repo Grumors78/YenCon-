@@ -6,6 +6,7 @@ import Vendor from "./pages/Vendor.jsx";
 import Auth from "./pages/Auth.jsx";
 import Saved from "./pages/Saved.jsx";
 import Account from "./pages/Account.jsx";
+import AccountPassword from "./pages/AccountPassword.jsx";
 import DashboardLayout from "./pages/DashboardLayout.jsx";
 import DashOverview from "./pages/DashOverview.jsx";
 import DashProducts from "./pages/DashProducts.jsx";
@@ -37,7 +38,8 @@ export default function App() {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/vendor/:id" element={<Vendor />} />
         <Route path="/saved" element={<Saved />} />
-        <Route path="/account" element={<RequireRole roles={["customer", "vendor", "admin"]}><Account /></RequireRole>} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/account/password" element={<RequireRole roles={["customer", "vendor", "admin"]}><AccountPassword /></RequireRole>} />
         <Route path="/login" element={<Auth mode="login" />} />
         <Route path="/signup" element={<Auth mode="signup" />} />
         <Route path="/dashboard" element={<RequireRole roles={["vendor"]}><DashboardLayout /></RequireRole>}>

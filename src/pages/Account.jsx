@@ -1,54 +1,70 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Avatar from "../components/Avatar.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useSaved } from "../context/SavedContext.jsx";
 
 const ROLES = { customer: "Buyer", vendor: "Seller", admin: "Admin" };
 
+// Opens when someone taps the profile picture in the header.
 export default function Account() {
-  const { user, changePassword, logout } = useAuth();
+  const { user, loading, shopLogo, logout } = useAuth();
+  const { ids } = useSaved();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [done, setDone] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const savedLabel = ids.length ? `Saved items (${ids.length})` : "Saved items";
 
-  async function onSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const f = new FormData(form);
-    setError("");
-    setDone(false);
-    if (f.get("next") !== f.get("again")) return setError("The new passwords don't match.");
-    setBusy(true);
-    try {
-      await changePassword(f.get("current"), f.get("next"));
-      form.reset();
-      setDone(true);
-    } catch (err) {
-      setError(err.message);
-    }
-    setBusy(false);
+  if (loading) return <main className="wrap profile"><p className="state">Loading…</p></main>;
+
+  if (!user) {
+    return (
+      <main className="wrap profile">
+        <div className="profile-head">
+          <Avatar big />
+          <div>
+            <h1>Welcome to Yen Con</h1>
+            <p className="meta">Log in or create an account.</p>
+          </div>
+        </div>
+        <div className="profile-actions">
+          <Link className="btn" to="/login">Log in</Link>
+          <Link className="btn ghost" to="/signup">Create account</Link>
+        </div>
+        <ul className="menu">
+          <li><Link to="/saved">{savedLabel}</Link></li>
+          <li><Link to="/signup">Sell on Yen Con</Link></li>
+        </ul>
+      </main>
+    );
   }
 
   return (
-    <main className="wrap auth">
-      <div className="auth-card">
-        <h1>Your account</h1>
-        <p>
-          <strong>{user.name}</strong><br />
-          <span className="meta">{user.email || user.phone} · {ROLES[user.role]}</span>
-        </p>
-        <button className="btn ghost" onClick={() => { logout(); navigate("/"); }}>Log out</button>
+    <main className="wrap profile">
+      <div className="profile-head">
+        <Avatar user={user} logo={shopLogo} big />
+        <div>
+          <h1>{user.name}</h1>
+          <p className="meta">{user.email || user.phone}</p>
+          <span className="role-tag">{ROLES[user.role]}</span>
+        </div>
       </div>
 
-      <form className="auth-card" onSubmit={onSubmit}>
-        <h2>Change password</h2>
-        <label>Current password<input name="current" type="password" required autoComplete="current-password" /></label>
-        <label>New password<input name="next" type="password" required minLength={8} maxLength={72} autoComplete="new-password" /></label>
-        <label>Repeat new password<input name="again" type="password" required minLength={8} maxLength={72} autoComplete="new-password" /></label>
-        {error && <p className="form-error" role="alert">{error}</p>}
-        <button className="btn" type="submit" disabled={busy}>{busy ? "Saving…" : "Change password"}</button>
-        {done && <p className="form-ok" role="status">Password changed.</p>}
-      </form>
+      {user.role === "vendor" && (
+        <>
+          <h2 className="menu-title">Your shop</h2>
+          <ul className="menu">
+            <li><Link to="/dashboard">Seller dashboard</Link></li>
+            <li><Link to="/dashboard/products/new">Add a product</Link></li>
+            <li><Link to="/dashboard/products">My products</Link></li>
+            <li><Link to="/dashboard/profile">Shop profile</Link></li>
+          </ul>
+        </>
+      )}
+
+      <h2 className="menu-title">Account</h2>
+      <ul className="menu">
+        <li><Link to="/saved">{savedLabel}</Link></li>
+        <li><Link to="/account/password">Change password</Link></li>
+        <li><button className="danger" onClick={() => { logout(); navigate("/"); }}>Log out</button></li>
+      </ul>
     </main>
   );
 }

@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { api, uploadImage } from "../api.js";
 import { towns, thumb } from "../lib.js";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export default function DashProfile() {
   const { shop, reload } = useOutletContext();
+  const { setShopLogo } = useAuth();
   const [logo, setLogo] = useState({ url: shop?.logo || "", file: null });
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
@@ -34,6 +36,7 @@ export default function DashProfile() {
         body: { shop: f.get("shop"), description: f.get("description"), town: f.get("town"), whatsapp: f.get("whatsapp"), logo: logoUrl },
       });
       await reload();
+      setShopLogo(logoUrl); // keeps the profile picture in the header up to date
       setLogo({ url: logoUrl, file: null });
       setDone(true);
     } catch (err) {
